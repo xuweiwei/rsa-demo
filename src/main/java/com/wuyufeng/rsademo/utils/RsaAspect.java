@@ -16,7 +16,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
   
 @Aspect  
 @Component  
-public class LogAspect {  
+public class RsaAspect {  
     @Pointcut("execution(public * com.wuyufeng.rsademo.controller.*.rsa*(..))")
     public void webLog(){}
   
