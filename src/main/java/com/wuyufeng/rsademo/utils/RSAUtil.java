@@ -411,7 +411,7 @@ public class RSAUtil {
             System.out.println("publicKey-->"+publicKey);
             System.out.println("privateKey-->"+privateKey);
              
-            String data = "123456";
+            String data = "abc123456";
             //加密
             String codeString = encryptString(publicKey, data);
             System.out.println(codeString);
