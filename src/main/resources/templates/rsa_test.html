@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>前端加密-后端解密</title>
+<meta charset="UTF-8" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta http-equiv="cache-control" content="no-cache" />
+<meta http-equiv="expires" content="0" />
+<meta http-equiv="keywords" content="keyword1,keyword2,keyword3" />
+<meta http-equiv="description" content="This is my page" />
+<script type="text/javascript" src="/js/RSA.js"></script>
+<script type="text/javascript" src="/js/BigInt.js"></script>
+<script type="text/javascript" src="/js/Barrett.js"></script>
+<script type="text/javascript"
+	src="http://ajax.aspnetcdn.com/ajax/jquery/jquery-2.1.1.min.js"></script>
+</head>
+
+<body>
+	<input id="modulus" type="text" data-th-value="${publicModulus }" />
+	<input id="publicExponent" type="text"
+		data-th-value="${publicExponent }" /> 需要加密的数据:
+
+	<form action="" id="tf">
+		<input type='text' name="username" id="username" style='width: 400px'
+			value="wu" /> <input type='text' name="password" id="password"
+			style='width: 400px' value="123456" /> <input id="submitcontent"
+			type="button" value="提交" onclick="descptcontent()" />
+	</form>
+
+	<br />
+	<br /> 解密后的内容:
+	<input readonly="readonly" id="showcontent" type="text" value="" />
+
+	<script type="text/javascript">
+		$.fn.serializeObject = function() {
+			var o = {};
+			var a = this.serializeArray();
+			$.each(a, function() {
+				if (o[this.name]) {
+					if (!o[this.name].push) {
+						o[this.name] = [ o[this.name] ];
+					}
+					o[this.name].push(this.value || '');
+				} else {
+					o[this.name] = this.value || '';
+				}
+			});
+			return JSON.stringify(o);
+		};
+		
+		
+		var key;
+		function descptcontent() {
+			var data = $("#tf").serializeObject();
+			
+			var publicExponent = $("#publicExponent").val();
+			var modulus = $("#modulus").val();
+			setMaxDigits(130);
+			var key = new RSAKeyPair(publicExponent, "", modulus);
+			var jsonData = encryptedString(key, encodeURIComponent(data));//对密码进行加密  
+
+			$.ajax({
+				url : '/testDecrype',
+				type : 'POST',
+				data : {
+					"data" : jsonData
+				},
+				success : function(returnData) {
+					$("#showcontent").val(returnData);
+				},
+				error : function(returndata) {
+					alert("请检查网络!");
+				}
+			});
+
+		}
+	</script>
+
+</body>
+</html>
