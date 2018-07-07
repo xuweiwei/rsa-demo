@@ -8,7 +8,6 @@ import java.security.interfaces.RSAPublicKey;
 
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,13 +25,11 @@ public class RootController {
 		return "rsa_test";
 	}
 	
-	
 	@PostMapping("/testDecrype")
 	@ResponseBody
-	public String testDecrype(String data, HttpSession session) throws UnsupportedEncodingException {
-		String decryptPassword = getRsaDecryptStr(data, session);
-		System.out.println("解密后的数据为："+ decryptPassword);
-		return decryptPassword;
+	public String rsatestDecrype(String data, HttpSession session) throws UnsupportedEncodingException {
+		System.out.println("解密后的数据为："+ data);
+		return data;
 	}
 
 	private void setModelRsaEncrypt(Model model, HttpSession session) {
@@ -45,12 +42,5 @@ public class RootController {
 		session.setAttribute("privateKey", private1);
 		model.addAttribute("publicExponent", publicExponent);
 		model.addAttribute("publicModulus", modulus);
-	}
-
-	private String getRsaDecryptStr(String data, HttpSession session) throws UnsupportedEncodingException {
-		RSAPrivateKey privateKey = (RSAPrivateKey)session.getAttribute("privateKey");
-		String decryptPassword = RsaEncryptionUtil.decryptString(privateKey, data);
-		decryptPassword = java.net.URLDecoder.decode(StringUtils.reverse(decryptPassword) ,"UTF-8");
-		return decryptPassword;
 	}
 }
